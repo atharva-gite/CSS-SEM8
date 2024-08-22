@@ -1,0 +1,8 @@
+Cipher Type: caesar, Key: 3, Plaintext: this is a test message to be encrypted using cipher, Ciphertext: wklv lv d whvw phvvdjh wr eh hqfubswhg xvlqj flskhu
+Cipher Type: playfair, Key: Atharva, Plaintext: This is the second test message, Ciphertext: HRMOMOHRFQFDPOCHFQVIFQNVLB
+Cipher Type: hill, Key: EHXWERPOL, Plaintext: ACT, Ciphertext: OSYV
+Cipher Type: monoalphabetic, Key: QWERTYUIOPASDFGHJKLZXCVBNM, Plaintext: the quick brown fox jumped over the fence, Ciphertext: ZIT JXOEA WKGVF YGB PXDHTR GCTK ZIT YTFET
+Cipher Type: caesar, Key: 7, Plaintext: Distributed computing deals with the study of, Ciphertext: Kpzaypibalk jvtwbapun klhsz dpao aol zabkf vm
+Cipher Type: vigenere, Key: SECRET, Plaintext: HELLO world!, Ciphertext: ZINCS OSTCH!
+Cipher Type: monoalphabetic, Key: QWERTYUIOPASDFGHJKLZXCVBNM, Plaintext: ade, Ciphertext: QRT
+Cipher Type: monoalphabetic, Key: QWERTYUIOPASDFGHJKLZXCVBNM, Plaintext: Tea, Ciphertext: ZTQ
