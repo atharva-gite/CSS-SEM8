@@ -70,5 +70,18 @@ def main():
 
     # Add more examples for other ciphers
 
+
+def main_poly():
+    cipher = SubstitutionCiphers()
+    plain_text = ""
+    with open("plain_text.txt") as f:
+        plain_text = f.read().replace("\n", "") 
+        
+    # Using polyalphabetic cipher
+    poly_key = "KEY"
+    poly_encrypted = cipher.polyalphabetic_cipher(plain_text, poly_key)
+    logging.info(f"Polyalphabetic Cipher: {poly_encrypted}")
+
 if __name__ == "__main__":
-    main()
+    # main()
+    main_poly()
