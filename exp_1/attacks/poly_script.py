@@ -64,7 +64,8 @@ def polyalphabetic_attack(ciphertext):
 
 # Example usage
 ciphertext = ""
-with open("cipher_text_poly.txt") as f:
+# with open("cipher_text_poly_act.txt") as f: 
+with open("cipher_text_poly_act.txt") as f: 
     ciphertext = f.read().replace("\n", "")
 plaintext, key = polyalphabetic_attack(ciphertext)
 print(f"Recovered key: {key}")

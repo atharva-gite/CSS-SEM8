@@ -34,9 +34,23 @@ class SubstitutionCiphers:
 
     def hill_cipher(self, text: str, key_matrix: List[List[int]]) -> str:
         """Encrypts text using Hill Cipher."""
-        # Implementation of Hill Cipher
-        pass  # Placeholder for actual implementation
+        result = []
+        text = ''.join(char.upper() for char in text if char.isalpha())  # Keep only alphabetic characters
+        text_length = len(text)
+        key_size = len(key_matrix)
+        padding = key_size - (text_length % key_size)
+        text += 'X' * padding  # Padding the text with 'X' if necessary
 
+        for i in range(0, text_length, key_size):
+            chunk = text[i:i+key_size]
+            chunk_vector = [self.alphabet.index(char) for char in chunk]
+            encrypted_vector = np.dot(key_matrix, chunk_vector) % 26
+            encrypted_chunk = ''.join(self.alphabet[index] for index in encrypted_vector)
+            result.append(encrypted_chunk)
+
+        return ''.join(result)
+    
+    
     def polyalphabetic_cipher(self, text: str, key: str) -> str:
         """Encrypts text using Polyalphabetic Cipher."""
         result = []
@@ -71,17 +85,35 @@ def main():
     # Add more examples for other ciphers
 
 
-def main_poly():
+def main_poly(key):
     cipher = SubstitutionCiphers()
     plain_text = ""
-    with open("plain_text.txt") as f:
+    # with open("plain_text.txt") as f:
+    with open("plain_text_2.txt") as f:
         plain_text = f.read().replace("\n", "") 
         
     # Using polyalphabetic cipher
-    poly_key = "KEY"
+    # poly_key = "KEY"
+    poly_key = key
     poly_encrypted = cipher.polyalphabetic_cipher(plain_text, poly_key)
     logging.info(f"Polyalphabetic Cipher: {poly_encrypted}")
+    with open("cipher_text_poly_act.txt", "w") as f:
+        f.write(poly_encrypted)
+
+def main_hill():
+    cipher = SubstitutionCiphers()
+    plain_text = ""
+    with open("plain_text.txt") as f:
+        plain_text = f.read().replace("\n", "")
+
+    # Using Hill cipher
+    key_matrix = [[6, 24, 1], [13, 16, 10], [20, 17, 15]]
+    hill_encrypted = cipher.hill_cipher(plain_text, key_matrix)
+    logging.info(f"Hill Cipher: {hill_encrypted}")
+    with open("cipher_text_hill.txt", "w") as f:
+        f.write(hill_encrypted)
 
 if __name__ == "__main__":
     # main()
-    main_poly()
+    main_poly("ACT")
+    # main_hill()
