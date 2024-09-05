@@ -44,8 +44,10 @@ def rail_fence_decrypt(ciphertext, num_rails):
 def brute_force_rail_fence(ciphertext, max_rails=10):
     for num_rails in range(2, max_rails + 1):
         decrypted = rail_fence_decrypt(ciphertext, num_rails)
-        print(f"With {num_rails} rails: {decrypted}")
+        print(f"With {num_rails} rails: \n {decrypted}")
 
 
 ciphertext = ""
+with open('2/transportation-techniques-2021300038/rail_fence_output_file.txt', 'r') as f:
+    ciphertext = f.read()
 brute_force_rail_fence(ciphertext, 10)

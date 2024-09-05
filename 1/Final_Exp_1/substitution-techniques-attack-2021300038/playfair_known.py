@@ -16,15 +16,13 @@ def generate_key_square_from_partial(known_plaintext, ciphertext):
     remaining_letters = [c for c in alphabet if c not in key_square]
     remaining_positions = [c for c in alphabet if c not in reverse_key_square]
 
-    key_square.update(zip(remaining_letters, remaining_positions))
+    for letter, position in zip(remaining_letters, remaining_positions):
+        key_square[letter] = position
+        reverse_key_square[position] = letter
 
     # Convert to 5x5 matrix
-    key_matrix = [[None]*5 for _ in range(5)]
-    idx = 0
-    for row in range(5):
-        for col in range(5):
-            key_matrix[row][col] = key_square[alphabet[idx]]
-            idx += 1
+    key_matrix = [[key_square[alphabet[5*row + col]]
+                   for col in range(5)] for row in range(5)]
 
     return key_matrix, reverse_key_square
 
@@ -41,33 +39,32 @@ def decrypt_digraph(key_square, digraph):
     row2, col2 = find_position(key_square, digraph[1])
 
     if row1 == row2:
-        # Same row, move left
         return key_square[row1][(col1 - 1) % 5] + key_square[row2][(col2 - 1) % 5]
     elif col1 == col2:
-        # Same column, move up
         return key_square[(row1 - 1) % 5][col1] + key_square[(row2 - 1) % 5][col2]
     else:
-        # Rectangle swap
         return key_square[row1][col2] + key_square[row2][col1]
 
 
 def decrypt_playfair(ciphertext, key_matrix):
-    plaintext = ""
-    for i in range(0, len(ciphertext), 2):
-        digraph = ciphertext[i:i+2]
-        plaintext += decrypt_digraph(key_matrix, digraph)
-    return plaintext
+    return ''.join(decrypt_digraph(key_matrix, ciphertext[i:i+2]) for i in range(0, len(ciphertext), 2))
+
+
+def format_key_square(key_matrix):
+    return '\n'.join(' '.join(row) for row in key_matrix)
 
 
 # Example usage
-ciphertext = "DLMQGDUUEOTGOHCTQD"
-known_plaintext = "THIS"
+ciphertext = "MUGSPPLHKDWFQPZONP"
+known_plaintext = "IWANT"
 
 key_matrix, reverse_key_matrix = generate_key_square_from_partial(
     known_plaintext, ciphertext[:len(known_plaintext)])
 
 if key_matrix:
-    decrypted_text = decrypt_playfair(ciphertext, reverse_key_matrix)
-    print(f"Decrypted text: {decrypted_text}")
+    decrypted_text = decrypt_playfair(ciphertext, key_matrix)
+    print(f"Reconstructed Key Square:")
+    print(format_key_square(key_matrix))
+    print(f"\nDecrypted text: {decrypted_text}")
 else:
     print("Failed to reconstruct the key.")

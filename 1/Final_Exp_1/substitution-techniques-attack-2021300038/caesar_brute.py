@@ -10,6 +10,8 @@ def caesar_cipher_decrypt(ciphertext, shift):
     return decrypted_text
 
 
-ciphertext = input("Enter the ciphertext: ")
+ciphertext = """"""
+with open("cipher_text_caesar.txt") as f:
+    ciphertext = f.read().replace("\n", "")
 for shift in range(1, 26):
     print(f"Shift {shift}: {caesar_cipher_decrypt(ciphertext, shift)}")
