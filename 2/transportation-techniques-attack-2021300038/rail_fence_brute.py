@@ -47,5 +47,5 @@ def brute_force_rail_fence(ciphertext, max_rails=10):
         print(f"With {num_rails} rails: {decrypted}")
 
 
-ciphertext = ""
+ciphertext = "HOREL OLLWD"
 brute_force_rail_fence(ciphertext, 10)

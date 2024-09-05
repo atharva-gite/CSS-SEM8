@@ -13,12 +13,12 @@ def clean_text(text):
     return text
 
 def main():
-    with open("cipher_text_poly_a.txt") as f:
+    with open(r"CSS-SEM8\2\transportation-techniques-2021300038\input.txt") as f:
         cipher_text = f.read().replace("\n", "")
 
     cleaned_text = clean_text(cipher_text)
     return cleaned_text
 
 cipher_text = main()
-with open("cipher_text_poly_a_cleaned_3.txt", "w") as f:
+with open("transport_cipher.txt", "w") as f:
     f.write(cipher_text)

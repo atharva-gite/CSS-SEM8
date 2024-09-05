@@ -62,6 +62,7 @@ def brute_force_playfair(ciphertext, iterations=10000):
     return best_plaintext, best_key
 
 # Example usage
-ciphertext = "BPLYKRLHFEKIDBNFVUVIVZHZOPKERVNDFVLXWFESFEYSPTONLYNRBLEPHZSFTABQBNSEMBNZVAQZ"
-best_plaintext, best_key = brute_force_playfair(ciphertext, iterations=10000)
+with open("cipher_text_hill_txt.txt") as f: 
+    ciphertext = f.read().replace("\n", "")
+best_plaintext,best_key=brute_force_playfair(ciphertext,iterations=10000)
 print(f"Best decryption attempt:\n{best_plaintext}")

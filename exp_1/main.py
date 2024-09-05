@@ -5,7 +5,9 @@ import logging
 from typing import List, Tuple
 
 # Set up logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 class SubstitutionCiphers:
     def __init__(self):
@@ -35,7 +37,8 @@ class SubstitutionCiphers:
     def hill_cipher(self, text: str, key_matrix: List[List[int]]) -> str:
         """Encrypts text using Hill Cipher."""
         result = []
-        text = ''.join(char.upper() for char in text if char.isalpha())  # Keep only alphabetic characters
+        # Keep only alphabetic characters
+        text = ''.join(char.upper() for char in text if char.isalpha())
         text_length = len(text)
         key_size = len(key_matrix)
         padding = key_size - (text_length % key_size)
@@ -45,12 +48,12 @@ class SubstitutionCiphers:
             chunk = text[i:i+key_size]
             chunk_vector = [self.alphabet.index(char) for char in chunk]
             encrypted_vector = np.dot(key_matrix, chunk_vector) % 26
-            encrypted_chunk = ''.join(self.alphabet[index] for index in encrypted_vector)
+            encrypted_chunk = ''.join(
+                self.alphabet[index] for index in encrypted_vector)
             result.append(encrypted_chunk)
 
         return ''.join(result)
-    
-    
+
     def polyalphabetic_cipher(self, text: str, key: str) -> str:
         """Encrypts text using Polyalphabetic Cipher."""
         result = []
@@ -71,6 +74,7 @@ class SubstitutionCiphers:
             possible_texts.append(self.caesar_cipher(cipher_text, -shift))
         return possible_texts
 
+
 def main():
     # Example usage
     cipher = SubstitutionCiphers()
@@ -90,8 +94,8 @@ def main_poly(key):
     plain_text = ""
     # with open("plain_text.txt") as f:
     with open("plain_text_2.txt") as f:
-        plain_text = f.read().replace("\n", "") 
-        
+        plain_text = f.read().replace("\n", "")
+
     # Using polyalphabetic cipher
     # poly_key = "KEY"
     poly_key = key
@@ -99,6 +103,7 @@ def main_poly(key):
     logging.info(f"Polyalphabetic Cipher: {poly_encrypted}")
     with open("cipher_text_poly_act.txt", "w") as f:
         f.write(poly_encrypted)
+
 
 def main_hill():
     cipher = SubstitutionCiphers()
@@ -113,7 +118,30 @@ def main_hill():
     with open("cipher_text_hill.txt", "w") as f:
         f.write(hill_encrypted)
 
+
+def main_caesar():
+    cipher = SubstitutionCiphers()
+    plain_text = ""
+    with open("plain_text_2.txt") as f:
+        plain_text = f.read().replace("\n", "")
+    # Using caesar cipher
+    caesar_encrypted = cipher.caesar_cipher(plain_text, 7)
+    with open("cipher_text_caesar.txt", "w") as f:
+        f.write(caesar_encrypted)
+
+
+def main_mono():
+    key = "QAZWSXEDCRFVTGBYHNUJMIKOLP"
+    cipher = SubstitutionCiphers()
+    plain_text = ""
+    with open("plain_text_2.txt") as f:
+        plain_text = f.read().replace("\n", "")
+    mono_encrypted = cipher.monoalphabetic_cipher(plain_text, key)
+    with open("cipher_text_mono.txt", "w") as f:
+        f.write(mono_encrypted)
+
+
 if __name__ == "__main__":
     # main()
-    main_poly("ACT")
+    main_hill()
     # main_hill()
