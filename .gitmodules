@@ -1,6 +1,0 @@
-[submodule "exp_2/col_attack"]
-	path = exp_2/col_attack
-	url = git@github.com:hywhuangyuwei/columnar-transposition-cipher-brute-force-decipher.git
-[submodule "exp_2/col_attack_v2"]
-	path = exp_2/col_attack_v2
-	url = git@github.com:Darkrove/Columnar-Transposition-Cipher.git
