@@ -1,24 +1,36 @@
 def row_column_decrypt(ciphertext, key):
     col = len(key)
     row = len(ciphertext) // col + (len(ciphertext) % col != 0)
-    matrix = [['\n' for _ in range(col)] for _ in range(row)]
 
-    # Determine the order of columns based on the sorted key
-    sorted_key_indices = sorted(range(len(key)), key=lambda k: key[k])
+    # Initialize the matrix with empty strings
+    matrix = [['' for _ in range(col)] for _ in range(row)]
 
-    # Fill the matrix with the ciphertext in column-wise order based on sorted key
+    # Get the key order to determine how to fill the columns (unsorted key order)
+    key_order = [int(k) - 1 for k in key]  # Convert '31524' to [2, 0, 4, 1, 3]
+
+    # Fill the matrix by columns based on the key order
     index = 0
-    for c in sorted_key_indices:
+    for i in range(col):
+        # Fill the matrix by column order specified by key
+        current_col = key_order[i]
         for r in range(row):
             if index < len(ciphertext):
-                matrix[r][c] = ciphertext[index]
+                matrix[r][current_col] = ciphertext[index]
                 index += 1
 
-    # Read the matrix row-wise to get the plaintext
+    # Read the matrix row by row to get the plaintext
     plaintext = ""
-    for r in range(row):
+    for r in range(len(matrix)):
         for c in range(col):
-            if matrix[r][c] != '\n':
+            if matrix[r][c] != '':  # Ignore any padding
                 plaintext += matrix[r][c]
 
     return plaintext
+
+
+ciphertext = ''
+with open("2/transportation-techniques-2021300038/row_column_output_file.txt", 'r') as f:
+    ciphertext = f.read()
+
+result = row_column_decrypt(ciphertext, '31524')
+print("Decrypted result:", result)
