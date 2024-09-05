@@ -11,26 +11,28 @@ def numbers_to_text(numbers):
 def matrix_mod_inv(matrix, modulus):
     return Matrix(matrix).inv_mod(modulus)
 
-def hill_cipher_attack(plaintext, ciphertext, block_size):
-    # Convert plaintext and ciphertext to numbers
+def hill_cipher_attack(plaintext, ciphertext):
     P = text_to_numbers(plaintext)
+    P_reshaped = []
+    for i in P:
+        P_reshaped.append([i])
+    print(P)
+    # [
+    # [],
+    # [],
+    # []
+    # ]
+
+    # reshape P into the above format
+
     C = text_to_numbers(ciphertext)
-
-    # Ensure we have enough plaintext-ciphertext pairs
-    if len(P) < block_size * block_size or len(C) < block_size * block_size:
-        raise ValueError("Not enough plaintext-ciphertext pairs for the given block size")
-
-    # Create matrices
-    P_matrix = np.array(P[:block_size * block_size]).reshape(block_size, block_size)
-    C_matrix = np.array(C[:block_size * block_size]).reshape(block_size, block_size)
-
-    print("uninverted", P_matrix)
-
-    # Calculate the key matrix
-    P_inv = matrix_mod_inv(P_matrix, 26)
-    K = (P_inv * Matrix(C_matrix)) % 26
-
-    return np.array(K).astype(int)
+    C_reshaped = []
+    for i in C:
+        C_reshaped.append([i])
+    C_inv = np.invert(C)
+    K = C_inv * P
+    print(K)
+    
 
 def hill_cipher_decrypt(ciphertext, key):
     block_size = key.shape[0]
@@ -50,30 +52,63 @@ def hill_cipher_decrypt(ciphertext, key):
     return numbers_to_text(P)
 
 # Example usage
-plaintext = ""
-with open("plain_text.txt", "r") as file:
-    plaintext = file.read().replace("\n", "")
+plaintext = "ACT"
+plain_texts = [
+            "ACT",
+            "BDF",
+            "UIG"
+        ]
+
+ciphertexts = [
+    "POH",
+    "FHQ",
+    "GGC"
+]
+
+M = []
+
+for text in plain_texts:
+    M.append(text_to_numbers(text))
+
+C = []
+
+for text in ciphertexts:
+    C.append(text_to_numbers(text))
+
+# M_inv = Matrix(M).inv_mod(26)
+M_inv = Matrix(M).inv()
+C = np.array(C)
+K = np.dot(M_inv, C) % 26
+# approximate to decimal
+for i in range(len(K)):
+    for j in range(len(K[i])):
+        K[i][j] = int(round(K[i][j], 0))
+
+print(K)
 
 
-ciphertext = ""
-with open("cipher_text_hill.txt", "r") as file:
-    ciphertext = file.read().replace("\n", "")
+# # with open("plain_text.txt", "r") as file:
+# #     plaintext = file.read().replace("\n", "")
 
-block_size = 3
 
-try:
-    print("Attacking Hill cipher...")
-    key = hill_cipher_attack(plaintext, ciphertext, block_size)
-    print(f"Recovered key:\n{key}")
+# ciphertext = "POH"
+# # with open("cipher_text_hill.txt", "r") as file:
+# #     ciphertext = file.read().replace("\n", "")
+ 
 
-    # Test the recovered key by decrypting the ciphertext
-    decrypted = hill_cipher_decrypt(ciphertext, key)
-    print(f"\nDecrypted text: {decrypted}")
+# try:
+#     print("Attacking Hill cipher...")
+#     key = hill_cipher_attack(plaintext, ciphertext)
+#     print(f"Recovered key:\n{key}")
 
-    if decrypted.startswith(plaintext):
-        print("Attack successful! The decrypted text matches the original plaintext.")
-    else:
-        print("Attack may have failed. The decrypted text doesn't match the original plaintext.")
+#     # Test the recovered key by decrypting the ciphertext
+#     decrypted = hill_cipher_decrypt(ciphertext, key)
+#     print(f"\nDecrypted text: {decrypted}")
 
-except Exception as e:
-    print(f"An error occurred: {str(e)}")
+#     if decrypted.startswith(plaintext):
+#         print("Attack successful! The decrypted text matches the original plaintext.")
+#     else:
+#         print("Attack may have failed. The decrypted text doesn't match the original plaintext.")
+
+# except Exception as e:
+#     print(f"An error occurred: {str(e)}")

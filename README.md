@@ -11,3 +11,17 @@ Playfair CryptAnalysis -  https://www.nku.edu/~christensen/1901cscmat483%20Secti
 - Input is `cipher_text_poly_act.txt`
 - Following is the output
 ![alt text](image.png)
+
+
+# Attacks
+
+## Know-Plaintext attack on Hill Cipher
+
+![alt text](image-1.png)
+
+
+# EXP 2
+
+## Resources
+
+https://www.nku.edu/~christensen/1901cscmat483%20Section%2011%20columnar%20transpotion%20cryptanalysis.pdf
