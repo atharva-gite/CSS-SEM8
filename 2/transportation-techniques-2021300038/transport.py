@@ -57,7 +57,10 @@ def double_row_column_encrypt(plaintext, key1, key2):
 
 # plaintext = "HELLO WORLD"
 
-plaintext = """"""
+plaintext = ""
+with open("2/transportation-techniques-2021300038/input.txt", 'r') as f:
+    plaintext = f.read()
+# print(plaintext)
 key1 = "31524"  # Example key for Row-Column Transposition
 key2 = "24153"  # Example second key for Double Row-Column Transposition
 
@@ -77,16 +80,20 @@ num_rails = 3
 rf_encrypted = rail_fence_encrypt(plaintext, num_rails)
 with open('rail_fence_output_file.txt', 'w') as file:
     file.write(rf_encrypted)
-
+# print("Rail Fence Encryption:\n")
+# print(rf_encrypted)
 # Row-Column Encryption
 key1 = "31524"
 rc_encrypted = row_column_encrypt(plaintext, key1)
 with open('row_column_output_file.txt', 'w') as file:
     file.write(rc_encrypted)
-
+# print("Row Column Encryption:\n")
+# print(rc_encrypted)
 
 # Double Row-Column Encryption
 key2 = "24153"
 double_rc_encrypted = double_row_column_encrypt(plaintext, key1, key2)
 with open('double_row_column_output_file.txt', 'w') as file:
     file.write(double_rc_encrypted)
+print("Double Row Column Encryption:\n")
+print(double_rc_encrypted)

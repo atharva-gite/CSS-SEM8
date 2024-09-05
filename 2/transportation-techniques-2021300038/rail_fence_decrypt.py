@@ -46,3 +46,11 @@ def rail_fence_decrypt(ciphertext, key):
         row += 1 if dir_down else -1
 
     return "".join(result)
+
+
+ciphertext = ''
+with open("CSS-SEM8/2/transportation-techniques-2021300038/rail_fence_output_file.txt", 'r') as f:
+    ciphertext = f.read()
+
+result = rail_fence_decrypt(ciphertext, '3')
+print(result)
