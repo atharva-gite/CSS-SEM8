@@ -17,9 +17,9 @@ class ThirdPartyEntity:
 def run_third_party():
     entity = ThirdPartyEntity()
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(('localhost', 4444))
+    server.bind(('localhost', 7777))
     server.listen(5)
-    print("Third party service started on port 4444")
+    print("Third party service started on port 7777")
 
     while True:
         client_socket, addr = server.accept()
