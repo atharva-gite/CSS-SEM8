@@ -1,7 +1,7 @@
 import socket
 import pickle
-from Cryptodome.PublicKey import RSA
-from Cryptodome.Cipher import PKCS1_OAEP, AES
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP, AES
 
 
 def register_identity(identity, public_key):
