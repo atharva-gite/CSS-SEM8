@@ -50,7 +50,7 @@ def send_message(receiver_identity, message):
 
 
 if __name__ == '__main__':
-    identity = 'alice'
+    identity = 'atharva'
     key = RSA.generate(2048)
     public_key = key.publickey().export_key()
 
@@ -60,4 +60,4 @@ if __name__ == '__main__':
     # Step 2: Send encrypted message to receiver
     message = "This is a large secret message over 1000 characters..." * \
         10  # Sample large message
-    send_message('bob', message)
+    send_message('vedant', message)

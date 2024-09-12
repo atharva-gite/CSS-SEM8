@@ -40,7 +40,7 @@ def receive_message(private_key):
 
 
 if __name__ == '__main__':
-    identity = 'bob'
+    identity = 'vedant'
     key = RSA.generate(2048)
     public_key = key.publickey().export_key()
 
