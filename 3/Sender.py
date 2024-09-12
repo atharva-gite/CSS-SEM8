@@ -46,7 +46,30 @@ def send_message(receiver_identity, message):
     client.connect(('localhost', 3333))
     client.send(pickle.dumps({'encrypted_key': encrypted_key,
                 'ciphertext': ciphertext, 'nonce': aes_cipher.nonce}))
+    print("Message sent!")
     client.close()
+
+
+def menu(identity, public_key):
+    while True:
+        print("\n--- Sender Menu ---")
+        print("1. Register identity")
+        print("2. Send message")
+        print("3. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            register_identity(identity, public_key)
+        elif choice == '2':
+            receiver_identity = input("Enter receiver's identity: ")
+            message = input("Enter the message: ")
+            send_message(receiver_identity, message)
+        elif choice == '3':
+            print("Exiting sender service...")
+            break
+        else:
+            print("Invalid choice! Please try again.")
 
 
 if __name__ == '__main__':
@@ -54,10 +77,5 @@ if __name__ == '__main__':
     key = RSA.generate(2048)
     public_key = key.publickey().export_key()
 
-    # Step 1: Register identity
-    register_identity(identity, public_key)
-
-    # Step 2: Send encrypted message to receiver
-    message = "This is a large secret message over 1000 characters..." * \
-        10  # Sample large message
-    send_message('vedant', message)
+    # Start the menu
+    menu(identity, public_key)
