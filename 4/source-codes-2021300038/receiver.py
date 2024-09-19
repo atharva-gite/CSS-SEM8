@@ -3,11 +3,8 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from hashlib import sha256
 import random
-# Diffie-Hellman Key Exchange Parameters
 P = 23  # A prime number
 G = 9   # A primitive root modulo of P
-
-# Function to generate a Diffie-Hellman key
 
 
 def generate_dh_key():
@@ -15,35 +12,35 @@ def generate_dh_key():
     public_key = pow(G, private_key, P)   # Calculate public key
     return private_key, public_key
 
-# Function to compute shared key using the other party's public key
-
 
 def compute_shared_key(private_key, public_key_other):
     shared_key = pow(public_key_other, private_key, P)
     return shared_key
 
-# Function to decrypt a message using AES
-
 
 def decrypt_message(key, ciphertext):
-    # Hash the shared key to create a 256-bit key for AES
     aes_key = sha256(str(key).encode()).digest()
 
-    # Initialize AES cipher in ECB mode
     cipher = Cipher(algorithms.AES(aes_key), modes.ECB(),
                     backend=default_backend())
     decryptor = cipher.decryptor()
 
     decrypted_message = decryptor.update(ciphertext) + decryptor.finalize()
 
-    # Remove padding
     return decrypted_message.decode().strip()
 
-# Receiver (Server) implementation
+
+def read_encrypted_message(filename):
+    with open(filename, 'rb') as file:
+        encrypted_message = file.read()
+    print(f"Encrypted message read from {filename}")
+    return encrypted_message
 
 
 def receiver_program():
-    private_key, public_key = generate_dh_key()
+    private_key = None
+    public_key = None
+    shared_key = None
 
     # Create a socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -54,24 +51,41 @@ def receiver_program():
     client_socket, addr = server_socket.accept()
     print(f"Connected to sender: {addr}")
 
-    # Exchange public keys
-    sender_public_key = int(client_socket.recv(1024).decode())
-    print(f"Received sender's public key: {sender_public_key}")
+    while True:
+        # Wait for either key exchange or encrypted message
+        data = client_socket.recv(1024).decode()
 
-    print("Sending public key to sender...")
-    client_socket.send(str(public_key).encode())
+        if data.isdigit():
+            # Key exchange
+            sender_public_key = int(data)
+            print(f"Received sender's public key: {sender_public_key}")
 
-    # Compute shared key
-    shared_key = compute_shared_key(private_key, sender_public_key)
-    print(f"Shared key generated: {shared_key}")
+            if private_key is None or public_key is None:
+                private_key, public_key = generate_dh_key()
+            print("Sending public key to sender...")
+            client_socket.send(str(public_key).encode())
 
-    # Receive encrypted message
-    encrypted_message = client_socket.recv(1024)
-    decrypted_message = decrypt_message(shared_key, encrypted_message)
+            shared_key = compute_shared_key(private_key, sender_public_key)
+            print(f"Shared key generated: {shared_key}")
 
-    print(f"Decrypted message: {decrypted_message}")
+        elif data == 'Message sent.':
+            # Receive and decrypt the message
+            if shared_key is None:
+                print("Shared key not generated yet.")
+            else:
+                encrypted_message = read_encrypted_message(
+                    'encrypted_message.bin')
+                decrypted_message = decrypt_message(
+                    shared_key, encrypted_message)
+                print(f"Decrypted message: {decrypted_message}")
 
-    client_socket.close()
+        elif data == 'exit':
+            print("Exiting the program...")
+            client_socket.close()
+            break
+
+        else:
+            print(f"Received unexpected data: {data}")
 
 
 if __name__ == '__main__':

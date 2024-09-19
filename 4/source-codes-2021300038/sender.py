@@ -4,11 +4,8 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from hashlib import sha256
 
-# Diffie-Hellman Key Exchange Parameters
 P = 23  # A prime number
 G = 9   # A primitive root modulo of P
-
-# Function to generate a Diffie-Hellman key
 
 
 def generate_dh_key():
@@ -16,37 +13,36 @@ def generate_dh_key():
     public_key = pow(G, private_key, P)   # Calculate public key
     return private_key, public_key
 
-# Function to compute shared key using the other party's public key
-
 
 def compute_shared_key(private_key, public_key_other):
     shared_key = pow(public_key_other, private_key, P)
     return shared_key
 
-# Function to encrypt a message using AES
-
 
 def encrypt_message(key, plaintext):
-    # Hash the shared key to create a 256-bit key for AES
     aes_key = sha256(str(key).encode()).digest()
 
-    # Initialize AES cipher in ECB mode
     cipher = Cipher(algorithms.AES(aes_key), modes.ECB(),
                     backend=default_backend())
     encryptor = cipher.encryptor()
 
-    # Pad the plaintext to a multiple of 16 bytes
     padding_length = 16 - len(plaintext) % 16
     plaintext += ' ' * padding_length
 
     ciphertext = encryptor.update(plaintext.encode()) + encryptor.finalize()
     return ciphertext
 
-# Sender (Client) implementation
+
+def save_encrypted_message(filename, encrypted_message):
+    with open(filename, 'wb') as file:
+        file.write(encrypted_message)
+    print(f"Encrypted message saved to {filename}")
 
 
 def sender_program():
-    private_key, public_key = generate_dh_key()
+    private_key = None
+    public_key = None
+    shared_key = None
 
     # Create a socket
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -54,26 +50,47 @@ def sender_program():
 
     print("Connected to the receiver.")
 
-    # Exchange public keys
-    print("Sending public key to receiver...")
-    client_socket.send(str(public_key).encode())
+    while True:
+        print("\n--- MENU ---")
+        print("1. Generate Diffie-Hellman key")
+        print("2. Send an encrypted message")
+        print("3. Exit")
+        choice = input("Choose an option: ")
 
-    receiver_public_key = int(client_socket.recv(1024).decode())
-    print(f"Received receiver's public key: {receiver_public_key}")
+        if choice == '1':
+            # Generate and exchange keys
+            private_key, public_key = generate_dh_key()
+            print("Sending public key to receiver...")
+            client_socket.send(str(public_key).encode())
 
-    # Compute shared key
-    shared_key = compute_shared_key(private_key, receiver_public_key)
-    print(f"Shared key generated: {shared_key}")
+            receiver_public_key = int(client_socket.recv(1024).decode())
+            print(f"Received receiver's public key: {receiver_public_key}")
 
-    # Send a large message
-    message = input("Enter a message (1000+ characters): ")
-    encrypted_message = encrypt_message(shared_key, message)
+            shared_key = compute_shared_key(private_key, receiver_public_key)
+            print(f"Shared key generated: {shared_key}")
 
-    # Send encrypted message
-    client_socket.send(encrypted_message)
-    print("Encrypted message sent.")
+        elif choice == '2':
+            if shared_key is None:
+                print("You must generate a shared key first (Option 1).")
+            else:
+                message = input("Enter a message (1000+ characters): ")
+                encrypted_message = encrypt_message(shared_key, message)
 
-    client_socket.close()
+                # Save the encrypted message to a file
+                save_encrypted_message(
+                    'encrypted_message.bin', encrypted_message)
+
+                # Notify receiver that the message is saved
+                client_socket.send(b'Message sent.')
+
+        elif choice == '3':
+            print("Exiting the program...")
+            client_socket.send(b'exit')
+            client_socket.close()
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
 
 
 if __name__ == '__main__':
