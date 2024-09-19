@@ -2,7 +2,7 @@ import socket
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from hashlib import sha256
-
+import random
 # Diffie-Hellman Key Exchange Parameters
 P = 23  # A prime number
 G = 9   # A primitive root modulo of P
