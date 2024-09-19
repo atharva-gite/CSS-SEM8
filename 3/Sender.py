@@ -7,7 +7,7 @@ from Crypto.Random import get_random_bytes
 
 def register_identity(identity, public_key):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(('localhost', 4444))
+    client.connect(('localhost', 7777))
     request = {'type': 'register',
                'identity': identity, 'public_key': public_key}
     client.send(pickle.dumps(request))
@@ -18,7 +18,7 @@ def register_identity(identity, public_key):
 
 def get_public_key(identity):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(('localhost', 4444))
+    client.connect(('localhost', 7777))
     request = {'type': 'get_key', 'identity': identity}
     client.send(pickle.dumps(request))
     public_key = pickle.loads(client.recv(1024))
@@ -43,7 +43,7 @@ def send_message(receiver_identity, message):
 
     # Step 5: Send encrypted key and message to receiver
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(('localhost', 3333))
+    client.connect(('localhost', 2222))
     client.send(pickle.dumps({'encrypted_key': encrypted_key,
                 'ciphertext': ciphertext, 'nonce': aes_cipher.nonce}))
     print("Message sent!")

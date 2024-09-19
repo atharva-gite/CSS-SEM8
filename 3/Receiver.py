@@ -6,7 +6,7 @@ from Crypto.Cipher import PKCS1_OAEP, AES
 
 def register_identity(identity, public_key):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(('localhost', 4444))
+    client.connect(('localhost', 7777))
     request = {'type': 'register',
                'identity': identity, 'public_key': public_key}
     client.send(pickle.dumps(request))
@@ -17,7 +17,7 @@ def register_identity(identity, public_key):
 
 def receive_message(private_key):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(('localhost', 3333))
+    server.bind(('localhost', 2222))
     server.listen(5)
     print("Waiting for messages...")
 
