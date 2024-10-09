@@ -75,7 +75,9 @@ def aes_decrypt(key, iv, ciphertext):
 
 
 # Test the AES encryption and decryption
-message = b"Hello, this is a secret message!"
+message = b"cbc"
+#examples as per book
+# 'abc', 'cbc'
 iv, ciphertext = aes_encrypt(derived_key, message)
 decrypted_message = aes_decrypt(derived_key, iv, ciphertext)
 
@@ -87,6 +89,6 @@ print("Decrypted message:", decrypted_message.decode())
 sha512_hash = hashlib.sha512(message).hexdigest()
 print("SHA-512 Hash of the original message:", sha512_hash)
 
-# Hash the ciphertext (optional)
-ciphertext_hash = hashlib.sha512(ciphertext).hexdigest()
-print("SHA-512 Hash of the ciphertext:", ciphertext_hash)
+# # Hash the ciphertext (optional)
+# ciphertext_hash = hashlib.sha512(ciphertext).hexdigest()
+# print("SHA-512 Hash of the ciphertext:", ciphertext_hash)
