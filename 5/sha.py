@@ -75,13 +75,14 @@ def aes_decrypt(key, iv, ciphertext):
 
 
 # Test the AES encryption and decryption
-message = b"cbc"
-#examples as per book
+message = b"abc"
+# examples as per book
 # 'abc', 'cbc'
 iv, ciphertext = aes_encrypt(derived_key, message)
 decrypted_message = aes_decrypt(derived_key, iv, ciphertext)
 
 assert message == decrypted_message, "Decryption failed!"
+print("original message:", message.decode())
 print("Decrypted message:", decrypted_message.decode())
 
 

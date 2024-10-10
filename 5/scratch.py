@@ -102,6 +102,9 @@ def sha512(message):
 
 # Example usage
 if __name__ == "__main__":
-    message = b"cbc"
-    hash_value = sha512(message)
-    print(f"SHA-512: {hash_value}")
+    message1=b"abc"
+    message2 = b"cbc"
+    hash_value1=sha512(message1)
+    hash_value2 = sha512(message2)
+    print(f"message:{message1}, Hashed value by SHA-512: {hash_value1}")
+    print(f"message:{message2}, Hashed value by SHA-512: {hash_value2}")
